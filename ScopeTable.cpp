@@ -18,13 +18,15 @@ class ScopeTable{
     private:
         SymbolInfo **array;
         int num_buckets;
+        ScopeTable* parentSCope;
     public:
-        ScopeTable(int size){
+        ScopeTable(int size,ScopeTable* parent=nullptr){
             array = new SymbolInfo*[size];
             for(int i=0;i<size;i++){
                 array[i] = nullptr;
             }
             this->num_buckets = size;
+            this->parentSCope = parent;
         }
         ~ScopeTable(){
             for (int i=0;i<num_buckets;i++){
@@ -36,6 +38,9 @@ class ScopeTable{
                 }
             }
             delete [] array;
+        }
+        ScopeTable* getParent(){
+            return this->parentSCope;
         }
         bool insert(string name, string type){
             SymbolInfo* newSymbol = new SymbolInfo(name,type);
