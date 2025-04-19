@@ -9,12 +9,12 @@ class SymbolInfo{
         string type;
         SymbolInfo* next;
     public:
-        SymbolInfo(){
+        SymbolInfo(string name, string type){
+            this->name = name;
+            this->type = type;
             this->next = nullptr;
         }
-        ~SymbolInfo(){
 
-        }
         string getName(){
             return this->name;
         }
@@ -24,7 +24,7 @@ class SymbolInfo{
         string getType(){
             return this->type;
         }
-        string setType(string type){
+        void setType(string type){
             this->type = type;            
         }
         SymbolInfo* getNext(){
@@ -32,8 +32,5 @@ class SymbolInfo{
         }
         void setNext(SymbolInfo* next){
             this->next = next;
-        }
-        void unLink(){
-
         }
 };
