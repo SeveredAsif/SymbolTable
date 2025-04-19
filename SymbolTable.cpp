@@ -1,5 +1,6 @@
 using namespace std;
 #include "ScopeTable.cpp"
+int ScopeTable::scopeId = 1;
 
 class SymbolTable
 {
@@ -9,6 +10,7 @@ class SymbolTable
     public:
 
         SymbolTable(int bucketCount=7){
+            // ScopeTable.setScopeId(1);
             currentScope = new ScopeTable(bucketCount);
             this->bucketCount = bucketCount;
         }

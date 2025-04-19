@@ -1,6 +1,9 @@
 using namespace std;
 #include "SymbolInfo.cpp"
 
+
+
+
 static unsigned long SDBMHash(string str) {
 	unsigned long hash = 0;
 	unsigned long i = 0;
@@ -16,11 +19,14 @@ static unsigned long SDBMHash(string str) {
 
 class ScopeTable{
     private:
+        static int scopeId;
         SymbolInfo **array;
         int num_buckets;
         ScopeTable* parentSCope;
+        int id;
     public:
         ScopeTable(int size,ScopeTable* parent=nullptr){
+            this->id = scopeId++;
             array = new SymbolInfo*[size];
             for(int i=0;i<size;i++){
                 array[i] = nullptr;
