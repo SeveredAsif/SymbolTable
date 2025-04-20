@@ -23,6 +23,7 @@ class ScopeTable{
         SymbolInfo **array;
         int num_buckets;
         ScopeTable* parentSCope;
+        string printingLine;
         int id;
     public:
         ScopeTable(int size,ScopeTable* parent=nullptr){
@@ -139,8 +140,3 @@ class ScopeTable{
             }
         }
     };
-
-    int main(){
-        ScopeTable st(7);
-        st.insert("foo","any");
-    }

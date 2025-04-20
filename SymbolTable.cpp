@@ -19,6 +19,9 @@ class SymbolTable
                 exitScope();
             }
         }
+        ScopeTable* getCurrectScope(){
+            return currentScope;
+        }
         void enterScope(){
             ScopeTable *newScope = new ScopeTable(bucketCount,currentScope);
             this->currentScope = newScope;
