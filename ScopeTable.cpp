@@ -23,7 +23,6 @@ class ScopeTable{
         SymbolInfo **array;
         int num_buckets;
         ScopeTable* parentSCope;
-        string printingLine;
         int id;
     public:
         ScopeTable(int size,ScopeTable* parent=nullptr){
@@ -49,13 +48,18 @@ class ScopeTable{
         ScopeTable* getParent(){
             return this->parentSCope;
         }
-        bool insert(string name, string type){
-            SymbolInfo* newSymbol = new SymbolInfo(name,type);
+        int getId(){
+            return this->id;
+        }
+        bool insert(string name, string type, string toPrint=""){
+            int chainPosition = 1;
+            SymbolInfo* newSymbol = new SymbolInfo(name,type,toPrint);
             unsigned long hashNumber = SDBMHash(name);
             int bucketNumber = hashNumber % num_buckets;
-            cout<<"yoo "<<bucketNumber<<endl;
+            //cout<<"yoo "<<bucketNumber<<endl;
             if(array[bucketNumber]==nullptr){
                 array[bucketNumber] = newSymbol;
+                cout<<"Inserted in ScopeTable# "<<this->id<<" at position "<<bucketNumber+1<<", "<<chainPosition<<endl;
                 return true;
 
             }
@@ -63,16 +67,21 @@ class ScopeTable{
                 SymbolInfo* temp = array[bucketNumber];
                 if(temp->getName()==name){
                     delete newSymbol;
+                    cout<<"'"<<name<<"'"<<" Already exists in the current ScopeTable"<<endl;
                     return false;
                 }
                 while(temp->getNext()!=nullptr){
                     temp = temp->getNext();
+                    chainPosition++;
                     if(temp->getName()==name){
                         delete newSymbol;
+                        cout<<"'"<<name<<"'"<<" Already exists in the current ScopeTable"<<endl;
                         return false;
                     }
                 }
                 temp->setNext(newSymbol);
+                chainPosition++;
+                cout<<"Inserted in ScopeTable# "<<this->id<<" at position "<<bucketNumber+1<<", "<<chainPosition<<endl;
                 return true;
             }
         }
@@ -80,20 +89,24 @@ class ScopeTable{
 
             int bucket = SDBMHash(name) % num_buckets;
             SymbolInfo* temp = array[bucket];
+            int chainPosition = 1;
             if(array[bucket]==nullptr){
                 return nullptr;
             }
             do{
                 string symbolName = temp->getName();
                 if(symbolName == name){
+                    cout<<"'"<<symbolName<<"' found in ScopeTable# "<<this->id<<" at position"<<bucket+1<<", "<<chainPosition<<endl;
                     return temp;
                 }
                 temp = temp->getNext();
+                chainPosition++;
             } 
             while(temp!=nullptr);
             return nullptr;
         }
         bool Delete(string name){
+            int chainPosition = 1;
             int bucket = SDBMHash(name) % num_buckets;
             if(array[bucket]==nullptr){
                 return false;
@@ -105,6 +118,7 @@ class ScopeTable{
                 array[bucket] = toDelete->getNext();
                 toDelete->setNext(nullptr);
                 delete toDelete;
+                cout<<"Deleted '"<<name<<"' from ScopeTable# "<<this->id<<" at position"<<bucket+1<<", "<<chainPosition<<endl;
                 return true;
             }
             else{
@@ -115,9 +129,11 @@ class ScopeTable{
                         SymbolInfo* toDelete = temp->getNext();
                         temp->setNext(temp->getNext()->getNext());
                         delete toDelete;
+                        cout<<"Deleted '"<<name<<"' from ScopeTable# "<<this->id<<" at position"<<bucket+1<<", "<<chainPosition<<endl;
                         return true;
                     }
                     temp = temp->getNext();
+                    chainPosition++;
                 } 
             }
             return false;
@@ -125,17 +141,19 @@ class ScopeTable{
 
         void print(){
             for (int i=0;i<num_buckets;i++){
-                cout<<i+1<<". ";
+                cout<<"\t";
+                cout<<i+1<<"--> ";
                 SymbolInfo* temp = array[i];
-                if(temp!=nullptr){
-                    cout<<temp->getName()<<" Type: "<<temp->getType();
+                while(temp!=nullptr){
+                    //cout<<temp->getName()<<" Type: "<<temp->getType();
+                    cout<<temp->getPrintingLine();
                     temp = temp->getNext();
                 }
 
-                while(temp!=nullptr){
-                    cout<<"-->"<<temp->getName()<<" Type: "<<temp->getType(); 
-                    temp = temp->getNext();                   
-                }
+                // while(temp!=nullptr){
+                //     cout<<"-->"<<temp->getName()<<" Type: "<<temp->getType(); 
+                //     temp = temp->getNext();                   
+                // }
                 cout<<""<<endl;
             }
         }

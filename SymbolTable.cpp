@@ -12,11 +12,14 @@ class SymbolTable
         SymbolTable(int bucketCount=7){
             // ScopeTable.setScopeId(1);
             currentScope = new ScopeTable(bucketCount);
+            cout<<"ScopeTable# "<<getCurrectScope()->getId()<<" created"<<endl;
             this->bucketCount = bucketCount;
         }
         ~SymbolTable(){
-            while(currentScope!=nullptr){
+            while(currentScope->getParent()!=nullptr){
                 exitScope();
+                cout<<"ScopeTable# "<<currentScope->getId()<<" removed"<<endl;
+                delete currentScope;
             }
         }
         ScopeTable* getCurrectScope(){
@@ -25,11 +28,13 @@ class SymbolTable
         void enterScope(){
             ScopeTable *newScope = new ScopeTable(bucketCount,currentScope);
             this->currentScope = newScope;
+            cout<<"ScopeTable# "<<getCurrectScope()->getId()<<" created"<<endl;
         }
 
         void exitScope(){
             ScopeTable *toExit = currentScope;
             if(currentScope->getParent()!=nullptr){ //preventing global scope to get deleted
+                cout<<"ScopeTable# "<<currentScope->getId()<<" removed"<<endl;
                 this->currentScope = currentScope->getParent();
                 delete toExit;
             }
@@ -46,13 +51,14 @@ class SymbolTable
 
         SymbolInfo* lookUp(string name){
             ScopeTable* temp = currentScope;
-            while(!temp->LookUp(name)){
-                if(temp==nullptr){
-                    return nullptr;
+            while(temp!=nullptr){
+                if(temp->LookUp(name)!=nullptr){
+                    return temp->LookUp(name);
                 }
                 temp = temp->getParent();
             }
-            return temp->LookUp(name);
+            cout<<"'"<<name<<"' not found in any of the ScopeTables"<<endl;
+            return nullptr;
         }
 
         void printCurrentScope(){
@@ -64,6 +70,8 @@ class SymbolTable
             while(temp!=nullptr){
                 temp->print();
                 temp = temp->getParent();
+                cout<<endl;
+                cout<<"\t";
             }
         }
 };
