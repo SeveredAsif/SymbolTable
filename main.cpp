@@ -65,7 +65,12 @@ int main() {
         // }
 
         if(arg[0]=="I"){
-            if(arg[2]=="VAR" || arg[2]=="NUMBER"){
+            if(count==2){
+                string toPrint = "<" + arg[1] + ","  + ">";
+                // cout<<toPrint<<endl;
+                scopeTable->insert(arg[1],"",toPrint);                
+            }
+            if(arg[2]=="VAR" || arg[2]=="NUMBER" || arg[2]=="RELOP" || arg[2]=="BOOL"){
                 if(count!=3){
                     cout<<"Number of parameters mismatch for the command I"<<endl;
                     continue;
@@ -117,7 +122,7 @@ int main() {
                     continue;                    
                 }
                 string structInfo="";
-                for(int i=3;i<count;i++){
+                for(int i=4;i<count;i++){
                     if(i==count-1) { 
                         structInfo +=  arg[i];
                     }

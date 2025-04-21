@@ -4,14 +4,14 @@ using namespace std;
 
 
 
-static unsigned long SDBMHash(string str) {
-	unsigned long hash = 0;
-	unsigned long i = 0;
-	unsigned long len = str.length();
+static unsigned int SDBMHash(string str, unsigned int num_buckets) {
+	unsigned long long hash = 0;
+	unsigned long long i = 0;
+	unsigned long long len = str.length();
 
 	for (i = 0; i < len; i++)
 	{
-		hash = (str[i]) + (hash << 6) + (hash << 16) - hash;
+		hash = ((str[i]) + (hash << 6) + (hash << 16) - hash) % num_buckets;
 	}
 
 	return hash;
@@ -54,8 +54,8 @@ class ScopeTable{
         bool insert(string name, string type, string toPrint=""){
             int chainPosition = 1;
             SymbolInfo* newSymbol = new SymbolInfo(name,type,toPrint);
-            unsigned long hashNumber = SDBMHash(name);
-            int bucketNumber = hashNumber % num_buckets;
+            unsigned int bucketNumber = SDBMHash(name,num_buckets);
+            //int bucketNumber = hashNumber % num_buckets;
             //cout<<"yoo "<<bucketNumber<<endl;
             if(array[bucketNumber]==nullptr){
                 array[bucketNumber] = newSymbol;
@@ -67,7 +67,7 @@ class ScopeTable{
                 SymbolInfo* temp = array[bucketNumber];
                 if(temp->getName()==name){
                     delete newSymbol;
-                    cout<<"'"<<name<<"'"<<" Already exists in the current ScopeTable"<<endl;
+                    cout<<"'"<<name<<"'"<<" already exists in the current ScopeTable"<<endl;
                     return false;
                 }
                 while(temp->getNext()!=nullptr){
@@ -75,7 +75,7 @@ class ScopeTable{
                     chainPosition++;
                     if(temp->getName()==name){
                         delete newSymbol;
-                        cout<<"'"<<name<<"'"<<" Already exists in the current ScopeTable"<<endl;
+                        cout<<"'"<<name<<"'"<<" already exists in the current ScopeTable"<<endl;
                         return false;
                     }
                 }
@@ -87,7 +87,7 @@ class ScopeTable{
         }
         SymbolInfo* LookUp(string name){
 
-            int bucket = SDBMHash(name) % num_buckets;
+            int bucket = SDBMHash(name,num_buckets);
             SymbolInfo* temp = array[bucket];
             int chainPosition = 1;
             if(array[bucket]==nullptr){
@@ -96,7 +96,7 @@ class ScopeTable{
             do{
                 string symbolName = temp->getName();
                 if(symbolName == name){
-                    cout<<"'"<<symbolName<<"' found in ScopeTable# "<<this->id<<" at position"<<bucket+1<<", "<<chainPosition<<endl;
+                    cout<<"'"<<symbolName<<"' found in ScopeTable# "<<this->id<<" at position "<<bucket+1<<", "<<chainPosition<<endl;
                     return temp;
                 }
                 temp = temp->getNext();
@@ -107,7 +107,7 @@ class ScopeTable{
         }
         bool Delete(string name){
             int chainPosition = 1;
-            int bucket = SDBMHash(name) % num_buckets;
+            int bucket = SDBMHash(name, num_buckets);
             if(array[bucket]==nullptr){
                 return false;
             }
@@ -118,7 +118,7 @@ class ScopeTable{
                 array[bucket] = toDelete->getNext();
                 toDelete->setNext(nullptr);
                 delete toDelete;
-                cout<<"Deleted '"<<name<<"' from ScopeTable# "<<this->id<<" at position"<<bucket+1<<", "<<chainPosition<<endl;
+                cout<<"Deleted '"<<name<<"' from ScopeTable# "<<this->id<<" at position "<<bucket+1<<", "<<chainPosition<<endl;
                 return true;
             }
             else{
@@ -142,11 +142,11 @@ class ScopeTable{
         void print(){
             for (int i=0;i<num_buckets;i++){
                 cout<<"\t";
-                cout<<i+1<<"--> ";
+                cout<<i+1<<"-->";
                 SymbolInfo* temp = array[i];
                 while(temp!=nullptr){
                     //cout<<temp->getName()<<" Type: "<<temp->getType();
-                    cout<<temp->getPrintingLine();
+                    cout<<" "<<temp->getPrintingLine();
                     temp = temp->getNext();
                 }
 

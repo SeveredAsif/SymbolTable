@@ -52,8 +52,9 @@ class SymbolTable
         SymbolInfo* lookUp(string name){
             ScopeTable* temp = currentScope;
             while(temp!=nullptr){
-                if(temp->LookUp(name)!=nullptr){
-                    return temp->LookUp(name);
+                SymbolInfo* found = temp->LookUp(name);
+                if(found!=nullptr){
+                    return found;
                 }
                 temp = temp->getParent();
             }
@@ -62,12 +63,14 @@ class SymbolTable
         }
 
         void printCurrentScope(){
+            cout<<"ScopeTable# "<<currentScope->getId()<<endl;
             currentScope->print();
         }
 
         void printAllScope(){
             ScopeTable* temp = currentScope;
             while(temp!=nullptr){
+                cout<<"ScopeTable# "<<temp->getId()<<endl;
                 temp->print();
                 temp = temp->getParent();
                 cout<<endl;
