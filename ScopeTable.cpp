@@ -59,7 +59,7 @@ class ScopeTable{
             //cout<<"yoo "<<bucketNumber<<endl;
             if(array[bucketNumber]==nullptr){
                 array[bucketNumber] = newSymbol;
-                cout<<"Inserted in ScopeTable# "<<this->id<<" at position "<<bucketNumber+1<<", "<<chainPosition<<endl;
+                cout<<"\tInserted in ScopeTable# "<<this->id<<" at position "<<bucketNumber+1<<", "<<chainPosition<<endl;
                 return true;
 
             }
@@ -67,7 +67,7 @@ class ScopeTable{
                 SymbolInfo* temp = array[bucketNumber];
                 if(temp->getName()==name){
                     delete newSymbol;
-                    cout<<"'"<<name<<"'"<<" already exists in the current ScopeTable"<<endl;
+                    cout<<"\t'"<<name<<"'"<<" already exists in the current ScopeTable"<<endl;
                     return false;
                 }
                 while(temp->getNext()!=nullptr){
@@ -75,13 +75,13 @@ class ScopeTable{
                     chainPosition++;
                     if(temp->getName()==name){
                         delete newSymbol;
-                        cout<<"'"<<name<<"'"<<" already exists in the current ScopeTable"<<endl;
+                        cout<<"\t'"<<name<<"'"<<" already exists in the current ScopeTable"<<endl;
                         return false;
                     }
                 }
                 temp->setNext(newSymbol);
                 chainPosition++;
-                cout<<"Inserted in ScopeTable# "<<this->id<<" at position "<<bucketNumber+1<<", "<<chainPosition<<endl;
+                cout<<"\tInserted in ScopeTable# "<<this->id<<" at position "<<bucketNumber+1<<", "<<chainPosition<<endl;
                 return true;
             }
         }
@@ -96,7 +96,7 @@ class ScopeTable{
             do{
                 string symbolName = temp->getName();
                 if(symbolName == name){
-                    cout<<"'"<<symbolName<<"' found in ScopeTable# "<<this->id<<" at position "<<bucket+1<<", "<<chainPosition<<endl;
+                    cout<<"\t'"<<symbolName<<"' found in ScopeTable# "<<this->id<<" at position "<<bucket+1<<", "<<chainPosition<<endl;
                     return temp;
                 }
                 temp = temp->getNext();
@@ -118,7 +118,7 @@ class ScopeTable{
                 array[bucket] = toDelete->getNext();
                 toDelete->setNext(nullptr);
                 delete toDelete;
-                cout<<"Deleted '"<<name<<"' from ScopeTable# "<<this->id<<" at position "<<bucket+1<<", "<<chainPosition<<endl;
+                cout<<"\tDeleted '"<<name<<"' from ScopeTable# "<<this->id<<" at position "<<bucket+1<<", "<<chainPosition<<endl;
                 return true;
             }
             else{
@@ -129,7 +129,7 @@ class ScopeTable{
                         SymbolInfo* toDelete = temp->getNext();
                         temp->setNext(temp->getNext()->getNext());
                         delete toDelete;
-                        cout<<"Deleted '"<<name<<"' from ScopeTable# "<<this->id<<" at position"<<bucket+1<<", "<<chainPosition<<endl;
+                        cout<<"\tDeleted '"<<name<<"' from ScopeTable# "<<this->id<<" at position"<<bucket+1<<", "<<chainPosition<<endl;
                         return true;
                     }
                     temp = temp->getNext();
@@ -139,22 +139,21 @@ class ScopeTable{
             return false;
         }
 
-        void print(){
-            for (int i=0;i<num_buckets;i++){
-                cout<<"\t";
-                cout<<i+1<<"-->";
-                SymbolInfo* temp = array[i];
-                while(temp!=nullptr){
-                    //cout<<temp->getName()<<" Type: "<<temp->getType();
-                    cout<<" "<<temp->getPrintingLine();
-                    temp = temp->getNext();
-                }
+        void print(int indentLevel) {
 
-                // while(temp!=nullptr){
-                //     cout<<"-->"<<temp->getName()<<" Type: "<<temp->getType(); 
-                //     temp = temp->getNext();                   
-                // }
-                cout<<""<<endl;
+            for(int i = 0; i < indentLevel; i++) cout << '\t';
+            cout << "ScopeTable# " << id << '\n';
+
+            for (int b = 0; b < num_buckets; b++) {
+                for(int i = 0; i < indentLevel; i++) cout << '\t';
+                cout << (b+1) << "--> ";
+                SymbolInfo* cur = array[b];
+                while (cur) {
+                    cout << cur->getPrintingLine() << ' ';
+                    cur = cur->getNext();
+                }
+                cout << '\n';
             }
         }
+
     };

@@ -47,8 +47,8 @@ int main() {
         
         while (s >> word)
             count++;
-        cout << "Cmd "<<commandNumber<<": "<<line <<" "<<'\n';
-        cout<<'\t';
+        cout << "Cmd "<<commandNumber<<": "<<line <<'\n';
+        // cout<<'\t';
 
         ScopeTable* scopeTable = st->getCurrectScope();
 
@@ -72,7 +72,7 @@ int main() {
             }
             if(arg[2]=="VAR" || arg[2]=="NUMBER" || arg[2]=="RELOP" || arg[2]=="BOOL"){
                 if(count!=3){
-                    cout<<"Number of parameters mismatch for the command I"<<endl;
+                    cout<<"\tNumber of parameters mismatch for the command I"<<endl;
                     continue;
                 }
                 string toPrint = "<" + arg[1] + "," + arg[2] + ">";
@@ -81,7 +81,7 @@ int main() {
             }
             else if(arg[2]=="STRUCT"){
                 if(count<3){
-                    cout<<"Number of parameters mismatch for the command I"<<endl;
+                    cout<<"\tNumber of parameters mismatch for the command I"<<endl;
                     continue;                    
                 }
                 string structInfo;
@@ -99,7 +99,7 @@ int main() {
             }
             else if(arg[2]=="UNION"){
                 if(count<3){
-                    cout<<"Number of parameters mismatch for the command I"<<endl;
+                    cout<<"\tNumber of parameters mismatch for the command I"<<endl;
                     continue;                    
                 }
                 string structInfo;
@@ -118,7 +118,7 @@ int main() {
             }
             else if(arg[2]=="FUNCTION"){
                 if(count<3){
-                    cout<<"Number of parameters mismatch for the command I"<<endl;
+                    cout<<"\tNumber of parameters mismatch for the command I"<<endl;
                     continue;                    
                 }
                 string structInfo="";
@@ -138,36 +138,37 @@ int main() {
         }
         else if(arg[0]=="L"){
             if(count!=2){
-                cout<<"Number of parameters mismatch for the command L"<<endl;
+                cout<<"\tNumber of parameters mismatch for the command L"<<endl;
                 continue;         
             }
             SymbolInfo* symbol =  st->lookUp(arg[1]);
         }
         else if(arg[0]=="D"){
             if(count!=2){
-                cout<<"Number of parameters mismatch for the command D"<<endl;
+                cout<<"\tNumber of parameters mismatch for the command D"<<endl;
                 continue;         
             }
             bool confirmation = st->getCurrectScope()->Delete(arg[1]);
             if (confirmation==false){
-                cout<<"Not found in the current ScopeTable"<<endl;
+                cout<<"\tNot found in the current ScopeTable"<<endl;
             }
         }
         else if(arg[0]=="P"){
             if(count!=2){
-                cout<<"Number of parameters mismatch for the command I"<<endl;
+                cout<<"\tNumber of parameters mismatch for the command I"<<endl;
                 continue;         
             }
             if(arg[1]=="C"){
                 st->printCurrentScope();
             }
             else if(arg[1]=="A"){
+                //cout << '\t';   
                 st->printAllScope();
             }
         }
         else if(arg[0]=="S"){
             if(count!=1){
-                cout<<"Number of parameters mismatch for the command S"<<endl;
+                cout<<"\tNumber of parameters mismatch for the command S"<<endl;
                 continue;         
             }
             st->enterScope();
@@ -175,14 +176,14 @@ int main() {
         }
         else if(arg[0]=="E"){
             if(count!=1){
-                cout<<"Number of parameters mismatch for the command E"<<endl;
+                cout<<"\tNumber of parameters mismatch for the command E"<<endl;
                 continue;         
             }
             st->exitScope();
         }
         else if(arg[0]=="Q"){
             if(count!=1){
-                cout<<"Number of parameters mismatch for the command Q"<<endl;
+                cout<<"\tNumber of parameters mismatch for the command Q"<<endl;
                 continue;         
             }
             delete st;
