@@ -15,11 +15,18 @@ class SymbolTable
             cout<<"\tScopeTable# "<<getCurrectScope()->getId()<<" created"<<endl;
             this->bucketCount = bucketCount;
         }
-        ~SymbolTable(){
-            while(currentScope->getParent()!=nullptr){
-                exitScope();
-                cout<<"\tScopeTable# "<<currentScope->getId()<<" removed"<<endl;
-                delete currentScope;
+        // ~SymbolTable(){
+        //     while(currentScope->getParent()!=nullptr){
+        //         exitScope();
+        //         cout<<"\tScopeTable# "<<currentScope->getId()<<" removed"<<endl;
+        //         delete currentScope;
+        //     }
+        // }
+        ~SymbolTable() noexcept {
+            while (currentScope) {
+                ScopeTable* parent = currentScope->getParent();
+                delete currentScope;       
+                currentScope = parent;     
             }
         }
         ScopeTable* getCurrectScope(){

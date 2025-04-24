@@ -7,16 +7,20 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
+    
+    // Expect: program <inputFile> <outputFile>
+    if (argc != 3) {
+        cout << "Usage: " << argv[0] << " <inputFile> <outputFile>" << endl;
+        return 1;
+    }
     unsigned (*hashPointer)(string, unsigned) = SDBMHash;
 
-    if (argc > 1) {
-        string arg = argv[1];
-        if (arg == "DJB2") hashPointer = djb2_hash;
-        else if (arg == "POLY") hashPointer = polynomial_hash;
-    }
+    // Open input and output files
+    const string inFile = argv[1];
+    const string outFile = argv[2];
 
-    ifstream input("in.txt");
-    ofstream output("out.txt");
+    ifstream input(inFile);
+    ofstream output(outFile);
     
     if (!input.is_open()) {
         cerr << "Failed to open input file\n";
@@ -92,6 +96,7 @@ int main(int argc, char* argv[]) {
             else if(arg[2]=="STRUCT"){
                 if(count<3){
                     cout<<"\tNumber of parameters mismatch for the command I"<<endl;
+                    delete [] arg;
                     continue;                    
                 }
                 string structInfo;
@@ -145,62 +150,77 @@ int main(int argc, char* argv[]) {
                 // cout<<toPrint<<endl;
 
             }
+            delete [] arg;
         }
         else if(arg[0]=="L"){
             if(count!=2){
                 cout<<"\tNumber of parameters mismatch for the command L"<<endl;
+                delete [] arg;
                 continue;         
             }
             SymbolInfo* symbol =  st->lookUp(arg[1]);
+            delete [] arg;
         }
         else if(arg[0]=="D"){
             if(count!=2){
                 cout<<"\tNumber of parameters mismatch for the command D"<<endl;
+                delete [] arg;
                 continue;         
             }
             bool confirmation = st->getCurrectScope()->Delete(arg[1]);
             if (confirmation==false){
                 cout<<"\tNot found in the current ScopeTable"<<endl;
             }
+            delete [] arg;
         }
         else if(arg[0]=="P"){
             if(count!=2){
                 cout<<"\tNumber of parameters mismatch for the command I"<<endl;
+                delete [] arg;
                 continue;         
             }
             if(arg[1]=="C"){
                 st->printCurrentScope();
+                delete [] arg;
             }
             else if(arg[1]=="A"){
                 //cout << '\t';   
                 st->printAllScope();
+                delete [] arg;
             }
         }
         else if(arg[0]=="S"){
             if(count!=1){
                 cout<<"\tNumber of parameters mismatch for the command S"<<endl;
+                delete [] arg;
                 continue;         
             }
             st->enterScope();
+            delete [] arg;
             
         }
         else if(arg[0]=="E"){
             if(count!=1){
                 cout<<"\tNumber of parameters mismatch for the command E"<<endl;
+                delete [] arg;
                 continue;         
             }
             st->exitScope();
+            delete [] arg;
         }
         else if(arg[0]=="Q"){
             if(count!=1){
                 cout<<"\tNumber of parameters mismatch for the command Q"<<endl;
+                delete [] arg;
                 continue;         
             }
             delete st;
+            delete [] arg;
             break;
         }
 
     }
+    
     cin.rdbuf(cinbuf);
     cout.rdbuf(coutbuf);
 
