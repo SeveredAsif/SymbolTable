@@ -1,0 +1,2 @@
+HashFunction,Inputs,BucketSize,Collisions,CollisionRatio
+POLY,100,50,55,1.10

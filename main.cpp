@@ -2,10 +2,19 @@
 #include <fstream> 
 #include<sstream>
 #include<string>
-#include "SymbolTable.cpp"
+#include "SymbolTable.hpp"
+
 using namespace std;
 
-int main() {
+int main(int argc, char* argv[]) {
+    unsigned (*hashPointer)(string, unsigned) = SDBMHash;
+
+    if (argc > 1) {
+        string arg = argv[1];
+        if (arg == "DJB2") hashPointer = djb2_hash;
+        else if (arg == "POLY") hashPointer = polynomial_hash;
+    }
+
     ifstream input("in.txt");
     ofstream output("out.txt");
     
@@ -27,11 +36,12 @@ int main() {
     int numberOfBuckets;
     cin>>numberOfBuckets;
     cin.ignore();
+    
 
     //cout<<numberOfBuckets<<endl;
 
     //initializing symbol Table
-    SymbolTable* st = new SymbolTable(numberOfBuckets);
+    SymbolTable* st = new SymbolTable(numberOfBuckets,hashPointer);
     int commandNumber = 0;
 
 

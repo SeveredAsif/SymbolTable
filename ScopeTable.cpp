@@ -3,8 +3,7 @@ using namespace std;
 
 
 
-
-static unsigned int SDBMHash(string str, unsigned int num_buckets) {
+ unsigned int SDBMHash(string str, unsigned int num_buckets) {
 	unsigned long long hash = 0;
 	unsigned long long i = 0;
 	unsigned long long len = str.length();
@@ -17,16 +16,38 @@ static unsigned int SDBMHash(string str, unsigned int num_buckets) {
 	return hash;
 }
 
+unsigned djb2_hash(string str, unsigned num_buckets) {
+    unsigned long long hash = 5381;
+    for (char c : str)
+        hash = ((hash << 5) + hash) + c; // hash * 33 + c
+    return hash % num_buckets;
+}
+
+unsigned polynomial_hash(string str, unsigned num_buckets) {
+    const int p = 31;
+    const int m = 1e9 + 9;
+    unsigned long long hash = 0, p_pow = 1;
+    for (char c : str) {
+        hash = (hash + (c - 'a' + 1) * p_pow) % m;
+        p_pow = (p_pow * p) % m;
+    }
+    return hash % num_buckets;
+}
+
 class ScopeTable{
     private:
+        unsigned (*hashFunc)(string, unsigned); 
         static int scopeId;
         SymbolInfo **array;
         int num_buckets;
         ScopeTable* parentSCope;
+        int collisionCount;
         int id;
     public:
-        ScopeTable(int size,ScopeTable* parent=nullptr){
+        ScopeTable(int size,ScopeTable* parent=nullptr,unsigned (*hashF)(string, unsigned)=SDBMHash){
             this->id = scopeId++;
+            this->hashFunc = hashF;
+            this->collisionCount = 0;
             array = new SymbolInfo*[size];
             for(int i=0;i<size;i++){
                 array[i] = nullptr;
@@ -51,10 +72,13 @@ class ScopeTable{
         int getId(){
             return this->id;
         }
+        int getCollision(){
+            return this->collisionCount;
+        }
         bool insert(string name, string type, string toPrint=""){
             int chainPosition = 1;
             SymbolInfo* newSymbol = new SymbolInfo(name,type,toPrint);
-            unsigned int bucketNumber = SDBMHash(name,num_buckets);
+            unsigned int bucketNumber = hashFunc(name,num_buckets);
             //int bucketNumber = hashNumber % num_buckets;
             //cout<<"yoo "<<bucketNumber<<endl;
             if(array[bucketNumber]==nullptr){
@@ -64,6 +88,7 @@ class ScopeTable{
 
             }
             else{
+                this->collisionCount++;
                 SymbolInfo* temp = array[bucketNumber];
                 if(temp->getName()==name){
                     delete newSymbol;
@@ -87,7 +112,7 @@ class ScopeTable{
         }
         SymbolInfo* LookUp(string name){
 
-            int bucket = SDBMHash(name,num_buckets);
+            int bucket = hashFunc(name,num_buckets);
             SymbolInfo* temp = array[bucket];
             int chainPosition = 1;
             if(array[bucket]==nullptr){
@@ -107,7 +132,7 @@ class ScopeTable{
         }
         bool Delete(string name){
             int chainPosition = 1;
-            int bucket = SDBMHash(name, num_buckets);
+            int bucket = hashFunc(name, num_buckets);
             if(array[bucket]==nullptr){
                 return false;
             }

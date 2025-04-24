@@ -1,0 +1,2 @@
+HashFunction,Inputs,BucketSize,Collisions,CollisionRatio
+SDBM,100,50,54,1.08

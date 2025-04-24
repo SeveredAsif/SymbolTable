@@ -9,9 +9,9 @@ class SymbolTable
         int bucketCount;
     public:
 
-        SymbolTable(int bucketCount=7){
+        SymbolTable(int bucketCount=7,unsigned (*hashPointer)(string, unsigned) = SDBMHash){
             // ScopeTable.setScopeId(1);
-            currentScope = new ScopeTable(bucketCount);
+            currentScope = new ScopeTable(bucketCount,nullptr,hashPointer);
             cout<<"\tScopeTable# "<<getCurrectScope()->getId()<<" created"<<endl;
             this->bucketCount = bucketCount;
         }
