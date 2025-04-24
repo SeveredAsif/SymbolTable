@@ -1,5 +1,5 @@
 using namespace std;
-#include "ScopeTable.cpp"
+#include "ScopeTable.hpp"
 int ScopeTable::scopeId = 1;
 
 class SymbolTable

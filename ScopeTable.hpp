@@ -1,5 +1,5 @@
 using namespace std;
-#include "SymbolInfo.cpp"
+#include "SymbolInfo.hpp"
 
 
 
