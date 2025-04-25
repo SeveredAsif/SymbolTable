@@ -25,6 +25,7 @@ class SymbolTable
         ~SymbolTable() noexcept {
             while (currentScope) {
                 ScopeTable* parent = currentScope->getParent();
+                cout<<"\tScopeTable# "<<currentScope->getId()<<" removed"<<endl;
                 delete currentScope;       
                 currentScope = parent;     
             }

@@ -79,11 +79,11 @@ int main(int argc, char* argv[]) {
         // }
 
         if(arg[0]=="I"){
-            if(count==2){
-                string toPrint = "<" + arg[1] + ","  + ">";
-                // cout<<toPrint<<endl;
-                scopeTable->insert(arg[1],"",toPrint);                
-            }
+            // if(count==2){
+            //     string toPrint = "<" + arg[1] + ","  + ">";
+            //     // cout<<toPrint<<endl;
+            //     scopeTable->insert(arg[1],"",toPrint);                
+            // }
             if(arg[2]=="VAR" || arg[2]=="NUMBER" || arg[2]=="RELOP" || arg[2]=="BOOL"){
                 if(count!=3){
                     cout<<"\tNumber of parameters mismatch for the command I"<<endl;
