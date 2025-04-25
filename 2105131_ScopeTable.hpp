@@ -1,5 +1,5 @@
 using namespace std;
-#include "SymbolInfo.hpp"
+#include "2105131_SymbolInfo.hpp"
 
 
 
@@ -15,13 +15,16 @@ using namespace std;
 
 	return hash;
 }
-
+// src: https://stackoverflow.com/questions/64699597/how-to-write-djb2-hashing-function-in-c
 unsigned djb2_hash(string str, unsigned num_buckets) {
     unsigned long long hash = 5381;
     for (char c : str)
         hash = ((hash << 5) + hash) + c; // hash * 33 + c
     return hash % num_buckets;
 }
+
+
+//src : https://algocademy.com/blog/rolling-hash-a-powerful-technique-for-string-manipulation-in-programming/
 
 unsigned polynomial_hash(string str, unsigned num_buckets) {
     const int p = 31;

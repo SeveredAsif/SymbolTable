@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string>
 #include <cstring>
-#include "SymbolTable.hpp"
+#include "2105131_SymbolTable.hpp"
 using namespace std;
 
 // Define 100 realistic identifiers and their types
